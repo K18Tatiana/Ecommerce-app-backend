@@ -8,6 +8,7 @@ const getAll = catchError(async(req, res) => {
 });
 
 const create = catchError(async(req, res) => {
+    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const category = await Category.create(req.body);
     return res.status(201).json(category);
 });
@@ -20,6 +21,7 @@ const getOne = catchError(async(req, res) => {
 });
 
 const remove = catchError(async(req, res) => {
+    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const { id } = req.params;
     const categories = await Category.destroy({ where: {id} });
     if(categories === 0) return res.sendStatus(404);
@@ -27,6 +29,7 @@ const remove = catchError(async(req, res) => {
 });
 
 const update = catchError(async(req, res) => {
+    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const { id } = req.params;
     const category = await Category.update(
         req.body,

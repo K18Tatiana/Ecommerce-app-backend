@@ -7,8 +7,8 @@ let token, productId;
 
 beforeAll(async() => {
     const credentials = {
-        email: "test@gmail.com",
-        password: "test1234"
+        email: "admin@gmail.com",
+        password: "admin1234"
     };
     const res = await request(app)
         .post("/api/v1/users/login")

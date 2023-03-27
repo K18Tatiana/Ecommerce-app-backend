@@ -8,8 +8,8 @@ let token, userId;
 
 beforeAll(async() => {
     const credentials = {
-        email: "test@gmail.com",
-        password: "test1234"
+        email: "admin@gmail.com",
+        password: "admin1234"
     };
     const res = await request(app)
         .post("/api/v1/users/login")
@@ -32,18 +32,17 @@ test("POST /api/v1/purchases should add cart to shopping and remove cart", async
         }
     ]);
     let cart = await Cart.findAll({ 
-        where: { userId },
         attributes: [ 'quantity', 'userId', 'productId' ],
         raw: true
     });
     const res = await request(app)
         .post("/api/v1/purchases")
-        .send(cart[0])
+        .send(cart)
         .set('Authorization', `Bearer ${token}`);
+    
     await product.destroy();
-    await cart.destroy({ where: { userId } });
-    console.log(cart);
-    console.log(cart);
+    await Cart.destroy({ where: { userId } });
+    cart = await Cart.findAll();
     expect(res.status).toBe(200);
     expect(cart).toHaveLength(0);
 });

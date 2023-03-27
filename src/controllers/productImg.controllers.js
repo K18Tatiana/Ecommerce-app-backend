@@ -9,6 +9,7 @@ const getAll = catchError(async(req, res) => {
 });
 
 const create = catchError(async(req, res) => {
+    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const images = req.files.map(file => {
         const url = req.protocol + '://' + req.headers.host + '/uploads/' + file.filename;
         const filename  = file.filename;
@@ -19,6 +20,7 @@ const create = catchError(async(req, res) => {
 });
 
 const remove = catchError(async(req, res) => {
+    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const { id } = req.params;
     const image = await ProductImg.findByPk(id);
     if(!image) return res.sendStatus(404);

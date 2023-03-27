@@ -18,7 +18,7 @@ const create = catchError(async(req, res) => {
 const getOne = catchError(async(req, res) => {
     const userId = req.user.id;
     const { id } = req.params;
-    const cart = await Cart.findOne({ where: { id, userId } });
+    const cart = await Cart.findOne({ where: { id, userId }, include: [ Product ] });
     if(!cart) return res.sendStatus(404);
     return res.json(cart);
 });
