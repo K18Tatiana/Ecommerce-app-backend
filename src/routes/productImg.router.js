@@ -2,14 +2,15 @@ const { getAll, create, remove } = require('../controllers/productImg.controller
 const express = require('express');
 const upload = require('../utils/multer');
 const verifyJWT = require('../utils/verifyJWT');
+const verifyAdmin = require('../utils/verifyAdmin');
 
 const productImgRouter = express.Router();
 
 productImgRouter.route('/')
     .get(verifyJWT, getAll)
-    .post(verifyJWT, upload.array('image'), create);
+    .post(verifyJWT, verifyAdmin, upload.array('image'), create);
 
 productImgRouter.route('/:id')
-    .delete(verifyJWT, remove);
+    .delete(verifyJWT, verifyAdmin, remove);
 
 module.exports = productImgRouter;

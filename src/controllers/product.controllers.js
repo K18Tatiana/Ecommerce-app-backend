@@ -17,7 +17,6 @@ const getAll = catchError(async(req, res) => {
 });
 
 const create = catchError(async(req, res) => {
-    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const product = await Product.create(req.body);
     return res.status(201).json(product);
 });
@@ -30,7 +29,6 @@ const getOne = catchError(async(req, res) => {
 });
 
 const remove = catchError(async(req, res) => {
-    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const { id } = req.params;
     const products = await Product.destroy({ where: {id} });
     if(products === 0) return res.sendStatus(404);
@@ -38,7 +36,6 @@ const remove = catchError(async(req, res) => {
 });
 
 const update = catchError(async(req, res) => {
-    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const { id } = req.params;
     const product = await Product.update(
         req.body,
@@ -49,7 +46,6 @@ const update = catchError(async(req, res) => {
 });
 
 const setProductImages = catchError(async(req, res) => {
-    if(req.user.role !== 'admin') return res.status(403).json({ message: "Invalid role" });
     const { id } = req.params;
     const product = await Product.findByPk(id);
     if(!product) return res.sendStatus(404);
