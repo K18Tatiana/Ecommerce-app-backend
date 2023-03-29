@@ -1,8 +1,6 @@
 const catchError = require('../utils/catchError');
 const ProductImg = require('../models/ProductImg');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../utils/cloudinary');
-const fs = require('fs');
-const path = require('path');
 
 const getAll = catchError(async(req, res) => {
     const productImg = await ProductImg.findAll();
