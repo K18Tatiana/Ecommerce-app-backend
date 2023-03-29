@@ -1,5 +1,6 @@
 const catchError = require('../utils/catchError');
 const ProductImg = require('../models/ProductImg');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../utils/cloudinary');
 const fs = require('fs');
 const path = require('path');
 
@@ -9,20 +10,17 @@ const getAll = catchError(async(req, res) => {
 });
 
 const create = catchError(async(req, res) => {
-    const images = req.files.map(file => {
-        const url = req.protocol + '://' + req.headers.host + '/uploads/' + file.filename;
-        const filename  = file.filename;
-        return { url, filename };
-    });
-    const productImgs = await ProductImg.bulkCreate(images);
-    return res.status(201).json(productImgs);
+    const { path, filename } = req.file;
+    const { url, public_id } = await uploadToCloudinary(path, filename);
+    const image = await ProductImg.create({ url, publicId: public_id });
+    return res.status(201).json(image);
 });
 
 const remove = catchError(async(req, res) => {
     const { id } = req.params;
     const image = await ProductImg.findByPk(id);
     if(!image) return res.sendStatus(404);
-    fs.unlinkSync(path.join(__dirname, '..', 'public', 'uploads', image.filename));
+    await deleteFromCloudinary(image.publicId);
     await image.destroy();
     return res.sendStatus(204);
 });
